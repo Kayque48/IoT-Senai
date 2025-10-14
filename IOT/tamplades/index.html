@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <h1>Controle de LEDs com Arduino via Web</h1>
+
+    <div class="container">
+        <h2>LED 1(Verde)</h2>
+        <button class="on" onclick="controlLed('1', 'on')">Ligar</button>
+        <button class="off" onclick="controlLed('1', 'off')">Desligar</button>
+    </div>
+
+    <div class="container">
+        <h2>LED 2 (Vermelho)</h2>
+        <button class="off" onclick="controlLed('2', 'off')">Ligar</button>
+        <button class="off" onclick="controlLed('2', 'off')">Desligar</button>
+    </div>
+
+    <script>
+        function controlLed(ledNum, action) {
+            fetch('/control/${ledNum}/${action}')
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    navegador
+                })
+                .catch(error => {
+                    console.error('Error: ', error);
+                });
+        }
+    </script>
+</body>
+</html>
