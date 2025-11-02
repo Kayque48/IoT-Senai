@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Controle Web do Alarme de Presença</title>
+</head>
+<body>
+    <h1>Controle Web do Alarme de Presença</h1>
+
+    <div class="container">
+        <h2>Alerta! Presença detectada</h2>
+
+        Confirmar (desligar alarme):
+        <button class="off" onclick="buttonAlarme('off')">Confirmar</button>
+
+        Ativar alarme remotamente:
+        <button class="on" onclick="buttonAlarme('on')">Ativar</button>
+
+        <p id="status"></p>
+    </div>
+
+    <script>
+    function buttonAlarme(action) {
+        fetch('/control/1/' + action)
+            .then(resp => resp.text())
+            .then(text => {
+                document.getElementById('status').innerText = text;
+            })
+            .catch(err => {
+                document.getElementById('status').innerText = 'Erro: ' + err;
+            });
+    }
+    </script>
+</body>
+</html>
