@@ -71,16 +71,86 @@
     </footer>
 
     <script>
+    let eventHistory = [];
+    
+    function updateStatus(message, isAlert = false) {
+        const statusIndicator = document.querySelector('.status-indicator');
+        const alertMessage = document.querySelector('.alert-message');
+        const currentStatus = document.getElementById('current-status');
+        
+        if (isAlert) {
+            statusIndicator.style.backgroundColor = '#e74c3c';
+            alertMessage.style.color = '#e74c3c';
+            addEventToHistory('ALERTA: ' + message);
+        } else {
+            statusIndicator.style.backgroundColor = '#2ecc71';
+        }
+        
+        alertMessage.textContent = message;
+        currentStatus.textContent = 'Status do Sistema: ' + message;
+    }
+
     function buttonAlarme(action) {
         fetch('/control/1/' + action)
             .then(resp => resp.text())
             .then(text => {
-                document.getElementById('status').innerText = text;
+                if (text.includes('ALARM_ON')) {
+                    updateStatus('Sistema Ativado');
+                    addEventToHistory('Sistema Ativado');
+                    document.getElementById('system-state').textContent = 'Ativo';
+                } else if (text.includes('ALARM_OFF')) {
+                    updateStatus('Sistema Desativado');
+                    addEventToHistory('Sistema Desativado');
+                    document.getElementById('system-state').textContent = 'Desativado';
+                }
             })
             .catch(err => {
-                document.getElementById('status').innerText = 'Erro: ' + err;
+                updateStatus('Erro: ' + err, true);
             });
     }
+
+    function addEventToHistory(event) {
+        const now = new Date();
+        const timestamp = now.toLocaleTimeString();
+        const eventText = `${timestamp} - ${event}`;
+        
+        eventHistory.unshift(eventText);
+        if (eventHistory.length > 10) eventHistory.pop();
+        
+        updateEventList();
+        document.getElementById('last-activity').textContent = eventText;
+    }
+
+    function updateEventList() {
+        const eventList = document.getElementById('event-list');
+        eventList.innerHTML = '';
+        eventHistory.forEach(event => {
+            const li = document.createElement('li');
+            li.textContent = event;
+            eventList.appendChild(li);
+        });
+    }
+
+    // Polling para verificar o status do sensor
+    function pollSensorStatus() {
+        fetch('/sensor-status')
+            .then(resp => resp.json())
+            .then(data => {
+                if (data.presence) {
+                    updateStatus('PRESENÇA DETECTADA!', true);
+                    document.getElementById('sensor-status').textContent = 'Movimento Detectado';
+                }
+            })
+            .catch(err => console.error('Erro ao verificar sensor:', err));
+    }
+
+    // Inicializa polling a cada 1 segundo
+    setInterval(pollSensorStatus, 1000);
+
+    // Adiciona event listeners para os botões
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('.btn-deactivate').addEventListener('click', () => buttonAlarme('off'));
+    });
     </script>
 </body>
 </html>
