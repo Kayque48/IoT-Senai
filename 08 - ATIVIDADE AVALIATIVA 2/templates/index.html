@@ -1,24 +1,74 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Controle Web do Alarme de Presença</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Alarme de Presença</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>Controle Web do Alarme de Presença</h1>
+    <header>
+        <h1>Sistema de Monitoramento de Presença</h1>
+        <div class="status-bar">
+            <span class="status-indicator"></span>
+            <p id="current-status">Status do Sistema: Monitorando</p>
+        </div>
+    </header>
 
-    <div class="container">
-        <h2>Alerta! Presença detectada</h2>
+    <main>
+        <!-- Seção de Alerta Principal -->
+        <section class="alert-section">
+            <div class="alert-box">
+                <h2>Status do Alarme</h2>
+                <div id="alert-status">
+                    <p class="alert-message">Nenhuma presença detectada</p>
+                </div>
+            </div>
+        </section>
 
-        Confirmar (desligar alarme):
-        <button class="off" onclick="buttonAlarme('off')">Confirmar</button>
+        <!-- Seção de Controles -->
+        <section class="controls">
+            <h2>Controles do Sistema</h2>
+            <div class="button-group">
+                <button class="btn-confirm" onclick="buttonAlarme('off')">Confirmar Ciência</button>
+                <button class="btn-activate" onclick="buttonAlarme('on')">Ativar Alarme</button>
+                <button class="btn-deactivate">Desativar Alarme</button>
+            </div>
+        </section>
 
-        Ativar alarme remotamente:
-        <button class="on" onclick="buttonAlarme('on')">Ativar</button>
+        <!-- Histórico de Eventos -->
+        <section class="history">
+            <h2>Histórico de Eventos</h2>
+            <div class="history-list">
+                <ul id="event-list">
+                    <!-- Eventos serão inseridos aqui via JavaScript -->
+                </ul>
+            </div>
+        </section>
 
-        <p id="status"></p>
-    </div>
+        <!-- Informações do Sistema -->
+        <section class="system-info">
+            <h2>Informações do Sistema</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <h3>Sensor</h3>
+                    <p id="sensor-status">Operacional</p>
+                </div>
+                <div class="info-item">
+                    <h3>Última Atividade</h3>
+                    <p id="last-activity">Nenhuma</p>
+                </div>
+                <div class="info-item">
+                    <h3>Estado do Sistema</h3>
+                    <p id="system-state">Online</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Sistema de Alarme de Presença - Versão 1.0</p>
+    </footer>
 
     <script>
     function buttonAlarme(action) {
